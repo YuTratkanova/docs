@@ -1,0 +1,192 @@
+{
+  "$schema": "https://mintlify.com/schema.json",
+  "name": "PandaPay Trade Platform",
+  "logo": {
+    "dark": "/logo/dark.svg",
+    "light": "/logo/light.svg"
+  },
+  "favicon": "/favicon.svg",
+  "colors": {
+    "primary": "#0D9373",
+    "light": "#07C983",
+    "dark": "#0D9373",
+    "anchors": {
+      "from": "#0D9373",
+      "to": "#07C983"
+    }
+  },
+  "topbarLinks": [
+    {
+      "name": "Support",
+      "url": "mailto:support@pandapay.com"
+    }
+  ],
+  "topbarCtaButton": {
+    "name": "Dashboard",
+    "url": "https://dashboard.pandapay.com"
+  },
+  "anchors": [
+    {
+      "name": "GitHub",
+      "icon": "github",
+      "url": "https://github.com/pandapay"
+    }
+  ],
+  "navigation": [
+    {
+      "group": "Начало работы",
+      "pages": [
+        "introduction",
+        "quickstart",
+        "architecture-overview"
+      ]
+    },
+    {
+      "group": "Роли и пользователи",
+      "pages": [
+        "roles/merchant",
+        "roles/trader",
+        "roles/team-lead",
+        "roles/admin",
+        "roles/super-admin"
+      ]
+    },
+    {
+      "group": "Backend API (Trade-Platform)",
+      "pages": [
+        "platform/api-introduction",
+        "platform/api-authentication",
+        {
+          "group": "Merchant API",
+          "pages": [
+            "platform/api-merchant/orders",
+            "platform/api-merchant/balance",
+            "platform/api-merchant/callbacks"
+          ]
+        },
+        {
+          "group": "Trader API",
+          "pages": [
+            "platform/api-trader/orders",
+            "platform/api-trader/requisites",
+            "platform/api-trader/payouts"
+          ]
+        },
+        {
+          "group": "Admin API",
+          "pages": [
+            "platform/api-admin/orders",
+            "platform/api-admin/disputes",
+            "platform/api-admin/users",
+            "platform/api-admin/stats"
+          ]
+        }
+      ]
+    },
+    {
+      "group": "Frontend (Trade-Frontend)",
+      "pages": [
+        "frontend/overview",
+        "frontend/getting-started",
+        {
+          "group": "Админ-панель",
+          "pages": [
+            "frontend/admin/dashboard",
+            "frontend/admin/orders",
+            "frontend/admin/users",
+            "frontend/admin/disputes",
+            "frontend/admin/balances",
+            "frontend/admin/payouts",
+            "frontend/admin/requisites",
+            "frontend/admin/banks",
+            "frontend/admin/devices",
+            "frontend/admin/settings"
+          ]
+        },
+        {
+          "group": "Мерчант интерфейс",
+          "pages": [
+            "frontend/merchant/dashboard",
+            "frontend/merchant/operations",
+            "frontend/merchant/payouts",
+            "frontend/merchant/disputes",
+            "frontend/merchant/settings"
+          ]
+        },
+        {
+          "group": "Трейдер интерфейс",
+          "pages": [
+            "frontend/trader/dashboard",
+            "frontend/trader/operations",
+            "frontend/trader/requisites",
+            "frontend/trader/payouts",
+            "frontend/trader/devices",
+            "frontend/trader/disputes"
+          ]
+        },
+        {
+          "group": "Тимлид интерфейс",
+          "pages": [
+            "frontend/team-lead/dashboard",
+            "frontend/team-lead/traders",
+            "frontend/team-lead/rewards",
+            "frontend/team-lead/settings"
+          ]
+        },
+        {
+          "group": "Payment Window",
+          "pages": [
+            "frontend/payment-window/overview",
+            "frontend/payment-window/integration"
+          ]
+        }
+      ]
+    },
+    {
+      "group": "Функционал системы",
+      "pages": [
+        "features/orders",
+        "features/balances",
+        "features/disputes",
+        "features/requisites",
+        "features/notifications",
+        "features/automation",
+        "features/payment-window"
+      ]
+    },
+    {
+      "group": "Техподдержка",
+      "pages": [
+        "support/faq",
+        "support/troubleshooting",
+        "support/common-issues",
+        "support/cloudwatch-guide",
+        "support/how-to-find-order",
+        "support/how-to-check-balance"
+      ]
+    },
+    {
+      "group": "Технические детали",
+      "pages": [
+        "technical/backend-architecture",
+        "technical/frontend-architecture",
+        "technical/database",
+        "technical/deployment",
+        "technical/security"
+      ]
+    }
+  ],
+  "footerSocials": {
+    "twitter": "https://twitter.com/pandapay",
+    "github": "https://github.com/pandapay"
+  },
+  "api": {
+    "baseUrl": "https://api.pandapay.com",
+    "auth": {
+      "method": "bearer"
+    }
+  },
+  "openapi": "../Trade-Platform-main/docs/swagger.yaml"
+}
+
+
