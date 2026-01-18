@@ -2,33 +2,9 @@
   "$schema": "https://mintlify.com/schema.json",
   "theme": "mint",
   "name": "PandaPay Trade Platform",
-  "logo": {
-    "dark": "/logo/dark.svg",
-    "light": "/logo/light.svg"
-  },
-  "favicon": "/favicon.svg",
   "colors": {
-    "primary": "#0D9373",
-    "light": "#07C983",
-    "dark": "#0D9373"
+    "primary": "#0D9373"
   },
-  "topbarLinks": [
-    {
-      "name": "Support",
-      "url": "mailto:support@pandapay.com"
-    }
-  ],
-  "topbarCtaButton": {
-    "name": "Dashboard",
-    "url": "https://dashboard.pandapay.com"
-  },
-  "anchors": [
-    {
-      "name": "GitHub",
-      "icon": "github",
-      "url": "https://github.com/pandapay"
-    }
-  ],
   "navigation": [
     {
       "group": "Начало работы",
@@ -172,16 +148,5 @@
         "technical/security"
       ]
     }
-  ],
-  "footerSocials": {
-    "twitter": "https://twitter.com/pandapay",
-    "github": "https://github.com/pandapay"
-  },
-  "api": {
-    "baseUrl": "https://api.pandapay.com",
-    "auth": {
-      "method": "bearer"
-    }
-  }
+  ]
 }
-
