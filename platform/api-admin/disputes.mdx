@@ -1,0 +1,102 @@
+---
+title: "Admin API - Споры"
+description: "API для управления спорами - просмотр, разрешение"
+---
+
+# Admin API - Споры
+
+API для администраторов позволяет управлять спорами и разрешать их.
+
+## Список споров
+
+Получите список всех споров.
+
+<ParamField query={{
+  status: "string (optional)",
+  order_id: "string (optional)",
+  limit: "number (optional)",
+  offset: "number (optional)"
+}} />
+
+**Пример:**
+
+```bash
+GET /admin/disputes?status=active
+Authorization: Bearer {admin_token}
+```
+
+## Получить спор
+
+Получите детальную информацию о споре.
+
+```bash
+GET /admin/disputes/{dispute_id}
+Authorization: Bearer {admin_token}
+```
+
+## Разрешить спор
+
+Примите решение по спору.
+
+<ParamField body={{
+  decision: "string (required)",
+  comment: "string (optional)"
+}} />
+
+**Возможные решения:**
+
+- `merchant_favor` - в пользу мерчанта
+- `trader_favor` - в пользу трейдера
+- `partial` - частичное решение
+
+**Пример запроса:**
+
+```bash
+POST /admin/disputes/{dispute_id}/resolve
+Authorization: Bearer {admin_token}
+Content-Type: application/json
+
+{
+  "decision": "merchant_favor",
+  "comment": "Merchant provided valid proof of payment"
+}
+```
+
+<Warning>
+Разрешение спора автоматически обрабатывает финансовые операции. Убедитесь в правильности решения перед подтверждением.
+</Warning>
+
+## Приостановить спор
+
+Приостановите спор для дополнительного расследования.
+
+```bash
+POST /admin/disputes/{dispute_id}/pause
+Authorization: Bearer {admin_token}
+Content-Type: application/json
+
+{
+  "reason": "Awaiting additional information"
+}
+```
+
+## Возобновить спор
+
+Возобновите приостановленный спор.
+
+```bash
+POST /admin/disputes/{dispute_id}/resume
+Authorization: Bearer {admin_token}
+```
+
+<Info>
+При разрешении спора система автоматически обрабатывает переводы средств и обновляет балансы пользователей.
+</Info>
+
+Подробнее: [Система споров](/features/disputes)
+
+## См. также
+
+- [Admin API - Заявки](/platform/api-admin/orders)
+- [Система споров](/features/disputes)
+

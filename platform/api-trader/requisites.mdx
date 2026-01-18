@@ -1,0 +1,126 @@
+---
+title: "Trader API - Реквизиты"
+description: "API для управления банковскими реквизитами трейдера"
+---
+
+# Trader API - Реквизиты
+
+API для управления банковскими реквизитами, которые используются для получения выплат.
+
+## Список реквизитов
+
+Получите список всех реквизитов трейдера.
+
+```bash
+GET /trader/requisites
+Authorization: Bearer {token}
+```
+
+**Пример ответа:**
+
+```json
+{
+  "requisites": [
+    {
+      "id": "req_123",
+      "bank_id": "bank_456",
+      "account_number": "1234567890",
+      "currency": "USD",
+      "country": "USA",
+      "status": "active",
+      "created_at": "2024-01-18T10:00:00Z"
+    }
+  ]
+}
+```
+
+## Добавить реквизит
+
+Добавьте новый банковский реквизит.
+
+<ParamField body={{
+  bank_id: "string (required)",
+  account_number: "string (required)",
+  currency: "string (required)",
+  country: "string (required)"
+}} />
+
+**Пример запроса:**
+
+```bash
+POST /trader/requisites
+Authorization: Bearer {token}
+Content-Type: application/json
+
+{
+  "bank_id": "bank_456",
+  "account_number": "1234567890",
+  "currency": "USD",
+  "country": "USA"
+}
+```
+
+**Пример ответа:**
+
+```json
+{
+  "id": "req_123",
+  "bank_id": "bank_456",
+  "account_number": "1234567890",
+  "currency": "USD",
+  "status": "active",
+  "message": "Requisite added successfully"
+}
+```
+
+<Warning>
+Убедитесь что реквизит корректен перед сохранением. Некорректные реквизиты могут привести к проблемам с выплатами.
+</Warning>
+
+## Обновить реквизит
+
+Обновите существующий реквизит.
+
+```bash
+PUT /trader/requisites/{requisite_id}
+Authorization: Bearer {token}
+Content-Type: application/json
+
+{
+  "account_number": "9876543210",
+  "status": "active"
+}
+```
+
+## Удалить реквизит
+
+Удалите реквизит (или деактивируйте).
+
+```bash
+DELETE /trader/requisites/{requisite_id}
+Authorization: Bearer {token}
+```
+
+## Валидация реквизитов
+
+Система автоматически проверяет реквизиты при добавлении:
+- Формат номера счета
+- Соответствие валюте и стране
+- Другие требования валидации
+
+<Info>
+Реквизиты используются для фильтрации доступных заявок. Убедитесь что у вас есть реквизиты для нужных валют и стран.
+</Info>
+
+## Статусы реквизитов
+
+- `active` - реквизит активен и используется
+- `inactive` - реквизит деактивирован
+
+Подробнее: [Управление реквизитами](/features/requisites)
+
+## См. также
+
+- [Trader API - Заявки](/platform/api-trader/orders)
+- [Управление реквизитами](/features/requisites)
+

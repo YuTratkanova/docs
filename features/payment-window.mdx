@@ -1,0 +1,136 @@
+---
+title: "Payment Window"
+description: "Окно оплаты для мерчантов - интеграция, настройка, использование"
+---
+
+# Payment Window
+
+Payment Window (Окно оплаты) - это готовое решение для приема платежей, которое можно легко интегрировать на сайт мерчанта.
+
+## Что такое Payment Window
+
+Payment Window - это встраиваемое окно оплаты, которое позволяет мерчантам принимать платежи без создания собственной системы обработки.
+
+<Info>
+Payment Window упрощает интеграцию для мерчантов, предоставляя готовый интерфейс для оплаты.
+</Info>
+
+## Основные возможности
+
+<CardGroup cols={2}>
+  <Card title="Простая интеграция" icon="code">
+    Легко встраивается на любой сайт через iframe или JavaScript
+  </Card>
+  <Card title="Кастомизация" icon="palette">
+    Настройка внешнего вида под ваш бренд
+  </Card>
+  <Card title="Безопасность" icon="shield">
+    Все данные обрабатываются на защищенных серверах PandaPay
+  </Card>
+  <Card title="Множество валют" icon="dollar-sign">
+    Поддержка различных валют и способов оплаты
+  </Card>
+</CardGroup>
+
+## Интеграция
+
+### Еслиrame интеграция
+
+Самый простой способ - встроить окно через iframe:
+
+```html
+<iframe 
+  src="https://payment.pandapay.com?order_id=ORDER_123&token=YOUR_TOKEN"
+  width="100%" 
+  height="600"
+  frameborder="0">
+</iframe>
+```
+
+### JavaScript SDK
+
+Для более гибкой интеграции используйте JavaScript SDK:
+
+```javascript
+<script src="https://payment.pandapay.com/sdk.js"></script>
+<script>
+  PandaPay.init({
+    orderId: 'ORDER_123',
+    token: 'YOUR_TOKEN',
+    onSuccess: function(order) {
+      console.log('Payment successful:', order);
+    },
+    onError: function(error) {
+      console.error('Payment error:', error);
+    }
+  });
+</script>
+```
+
+Подробнее: [Интеграция Payment Window](/frontend/payment-window/integration)
+
+## Настройка
+
+### Параметры окна
+
+- `order_id` - ID заявки для оплаты
+- `token` - Токен авторизации мерчанта
+- `theme` - Тема оформления (light/dark)
+- `locale` - Язык интерфейса
+
+### Кастомизация внешнего вида
+
+Можно настроить:
+- Цвета кнопок и элементов
+- Логотип мерчанта
+- Шрифты и размеры
+
+## Процесс оплаты
+
+<Steps>
+<Step title="Мерчант создает заявку">
+  Через API создается заявка с уникальным ID.
+</Step>
+
+<Step title="Открывается Payment Window">
+  Мерчант открывает окно оплаты, передавая order_id.
+</Step>
+
+<Step title="Пользователь оплачивает">
+  Пользователь видит детали заявки и выполняет оплату.
+</Step>
+
+<Step title="Обработка платежа">
+  Система обрабатывает платеж и обновляет статус заявки.
+</Step>
+
+<Step title="Callback уведомление">
+  Мерчант получает callback о изменении статуса заявки.
+</Step>
+</Steps>
+
+## Безопасность
+
+- Все платежные данные обрабатываются на серверах PandaPay
+- Используется HTTPS для всех запросов
+- Токены авторизации передаются безопасным способом
+- Проверка подписи для callback уведомлений
+
+<Warning>
+Никогда не передавайте токены авторизации в открытом виде. Используйте безопасные методы передачи.
+</Warning>
+
+## Частые вопросы
+
+<AccordionGroup>
+  <Accordion title="Как получить токен для Payment Window?">
+    Токен выдается при регистрации мерчанта или через API авторизации. Подробнее в разделе [Merchant API - Аутентификация](/platform/api-authentication).
+  </Accordion>
+  <Accordion title="Можно ли кастомизировать Payment Window?">
+    Да, можно настроить цвета, логотип и другие элементы внешнего вида через параметры при инициализации.
+  </Accordion>
+  <Accordion title="Какие валюты поддерживаются?">
+    Payment Window поддерживает все валюты, доступные в системе PandaPay. Список валют можно получить через API.
+  </Accordion>
+</AccordionGroup>
+

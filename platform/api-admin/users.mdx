@@ -1,0 +1,126 @@
+---
+title: "Admin API - Пользователи"
+description: "API для управления пользователями - просмотр, редактирование, блокировка"
+---
+
+# Admin API - Пользователи
+
+API для администраторов позволяет управлять пользователями системы.
+
+## Список пользователей
+
+Получите список всех пользователей с фильтрацией.
+
+<ParamField query={{
+  role: "string (optional)",
+  status: "string (optional)",
+  limit: "number (optional)",
+  offset: "number (optional)"
+}} />
+
+**Пример:**
+
+```bash
+GET /admin/users?role=trader&status=active
+Authorization: Bearer {admin_token}
+```
+
+## Получить пользователя
+
+Получите детальную информацию о пользователе.
+
+```bash
+GET /admin/users/{user_id}
+Authorization: Bearer {admin_token}
+```
+
+## Обновить пользователя
+
+Обновите информацию о пользователе.
+
+```bash
+PUT /admin/users/{user_id}
+Authorization: Bearer {admin_token}
+Content-Type: application/json
+
+{
+  "name": "Updated Name",
+  "email": "newemail@example.com"
+}
+```
+
+## Блокировать пользователя
+
+Заблокируйте пользователя.
+
+```bash
+POST /admin/users/{user_id}/block
+Authorization: Bearer {admin_token}
+Content-Type: application/json
+
+{
+  "reason": "Violation of terms"
+}
+```
+
+## Разблокировать пользователя
+
+Разблокируйте пользователя.
+
+```bash
+POST /admin/users/{user_id}/unblock
+Authorization: Bearer {admin_token}
+```
+
+## Изменить роль пользователя
+
+Измените роль пользователя (только для суперадминов).
+
+```bash
+POST /admin/users/{user_id}/role
+Authorization: Bearer {super_admin_token}
+Content-Type: application/json
+
+{
+  "role": "admin"
+}
+```
+
+<Warning>
+Изменение роли пользователя влияет на доступ к функциям системы. Используйте с осторожностью.
+</Warning>
+
+## Просмотр баланса пользователя
+
+Получите баланс любого пользователя.
+
+```bash
+GET /admin/users/{user_id}/balance
+Authorization: Bearer {admin_token}
+```
+
+## Управление балансом
+
+Пополните баланс пользователя (только для админов).
+
+```bash
+POST /admin/users/{user_id}/balance/topup
+Authorization: Bearer {admin_token}
+Content-Type: application/json
+
+{
+  "amount": 1000,
+  "currency": "USD",
+  "comment": "Manual top-up"
+}
+```
+
+<Info>
+Подробная документация всех эндпоинтов доступна в Swagger документации выше на этой странице.
+</Info>
+
+## См. также
+
+- [Admin API - Заявки](/platform/api-admin/orders)
+- [Admin API - Статистика](/platform/api-admin/stats)
+

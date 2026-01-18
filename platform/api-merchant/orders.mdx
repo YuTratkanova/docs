@@ -1,0 +1,108 @@
+---
+title: "Merchant API - Заявки"
+description: "API для мерчантов - создание и управление заявками"
+---
+
+# Merchant API - Заявки
+
+API для мерчантов позволяет создавать заявки и отслеживать их статус.
+
+## Создание заявки
+
+Создайте новую заявку на выполнение операции.
+
+<ParamField body={{
+  amount: "number (required)",
+  currency: "string (required)",
+  callback_url: "string (optional)",
+  additional_info: "object (optional)"
+}} />
+
+**Пример запроса:**
+
+```bash
+POST /merchant/orders
+Authorization: Bearer {token}
+Content-Type: application/json
+
+{
+  "amount": 1000,
+  "currency": "USD",
+  "callback_url": "https://your-site.com/api/callback"
+}
+```
+
+**Пример ответа:**
+
+```json
+{
+  "order_id": "order_abc123",
+  "status": "pending",
+  "amount": 1000,
+  "currency": "USD",
+  "created_at": "2024-01-18T10:00:00Z"
+}
+```
+
+## Получение заявки
+
+Получите информацию о конкретной заявке.
+
+```bash
+GET /merchant/orders/{order_id}
+Authorization: Bearer {token}
+```
+
+## Список заявок
+
+Получите список всех заявок мерчанта.
+
+<ParamField query={{
+  status: "string (optional)",
+  limit: "number (optional)",
+  offset: "number (optional)"
+}} />
+
+**Пример:**
+
+```bash
+GET /merchant/orders?status=completed&limit=10
+Authorization: Bearer {token}
+```
+
+## Статусы заявки
+
+- `pending` - ожидает принятия трейдером
+- `active` - принята трейдером, в процессе выполнения
+- `completed` - успешно завершена
+- `cancelled` - отменена
+- `disputed` - открыт спор
+
+<Info>
+Подробная документация всех эндпоинтов доступна в Swagger документации выше на этой странице.
+</Info>
+
+## Callback уведомления
+
+При изменении статуса заявки система отправляет callback на указанный `callback_url`.
+
+**Формат callback:**
+
+```json
+{
+  "order_id": "order_abc123",
+  "status": "completed",
+  "amount": 1000,
+  "currency": "USD",
+  "timestamp": "2024-01-18T10:00:00Z"
+}
+```
+
+Подробнее: [Merchant API - Callbacks](/platform/api-merchant/callbacks)
+
+## См. также
+
+- [Merchant API - Баланс](/platform/api-merchant/balance)
+- [Merchant API - Callbacks](/platform/api-merchant/callbacks)
+- [API Аутентификация](/platform/api-authentication)
+

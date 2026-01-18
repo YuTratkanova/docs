@@ -1,0 +1,94 @@
+---
+title: "Merchant API - Баланс"
+description: "API для работы с балансом мерчанта"
+---
+
+# Merchant API - Баланс
+
+API для просмотра и управления балансом мерчанта.
+
+## Получить баланс
+
+Получите текущий баланс мерчанта.
+
+```bash
+GET /merchant/balance
+Authorization: Bearer {token}
+```
+
+**Пример ответа:**
+
+```json
+{
+  "balance": 10000.50,
+  "currency": "USD",
+  "frozen_balance": 500.00,
+  "total_balance": 10500.50
+}
+```
+
+<CardGroup cols={2}>
+  <Card title="balance" icon="wallet">
+    Доступный баланс для операций
+  </Card>
+  <Card title="frozen_balance" icon="lock">
+    Замороженный баланс (недоступен для операций)
+  </Card>
+  <Card title="total_balance" icon="dollar-sign">
+    Общий баланс (balance + frozen_balance)
+  </Card>
+</CardGroup>
+
+## История операций
+
+Получите историю операций с балансом.
+
+<ParamField query={{
+  type: "string (optional)",
+  limit: "number (optional)",
+  offset: "number (optional)"
+}} />
+
+**Пример:**
+
+```bash
+GET /merchant/balance/history?type=order&limit=10
+Authorization: Bearer {token}
+```
+
+**Пример ответа:**
+
+```json
+{
+  "history": [
+    {
+      "id": "op_123",
+      "type": "order",
+      "amount": -1000.00,
+      "balance_before": 11000.50,
+      "balance_after": 10000.50,
+      "currency": "USD",
+      "created_at": "2024-01-18T10:00:00Z",
+      "order_id": "order_abc123"
+    }
+  ],
+  "total": 150
+}
+```
+
+## Типы операций
+
+- `order` - операция по заявке (списание)
+- `payout` - выплата (начисление, если применимо)
+- `topUp` - пополнение баланса
+- `withdrawal` - вывод средств
+- `block` - блокировка баланса
+- `unblock` - разблокировка баланса
+
+Подробнее: [Система балансов](/features/balances)
+
+## См. также
+
+- [Merchant API - Заявки](/platform/api-merchant/orders)
+- [Система балансов](/features/balances)
+

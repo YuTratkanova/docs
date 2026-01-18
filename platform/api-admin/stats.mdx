@@ -1,0 +1,127 @@
+---
+title: "Admin API - Статистика"
+description: "API для получения статистики и аналитики системы"
+---
+
+# Admin API - Статистика
+
+API для получения статистики и аналитики работы системы.
+
+## Общая статистика
+
+Получите общую статистику системы.
+
+```bash
+GET /admin/stats/overview
+Authorization: Bearer {admin_token}
+```
+
+**Пример ответа:**
+
+```json
+{
+  "total_orders": 1000,
+  "active_orders": 50,
+  "completed_orders": 900,
+  "total_users": 250,
+  "total_merchants": 100,
+  "total_traders": 150,
+  "total_balance": 500000.00
+}
+```
+
+## Статистика за период
+
+Получите статистику за указанный период.
+
+<ParamField query={{
+  date_from: "string (required)",
+  date_to: "string (required)"
+}} />
+
+**Пример:**
+
+```bash
+GET /admin/stats/period?date_from=2024-01-01&date_to=2024-01-31
+Authorization: Bearer {admin_token}
+```
+
+## Статистика по заявкам
+
+Получите статистику по заявкам.
+
+<ParamField query={{
+  status: "string (optional)",
+  currency: "string (optional)",
+  date_from: "string (optional)",
+  date_to: "string (optional)"
+}} />
+
+**Пример:**
+
+```bash
+GET /admin/stats/orders?status=completed&currency=USD
+Authorization: Bearer {admin_token}
+```
+
+**Пример ответа:**
+
+```json
+{
+  "total_orders": 500,
+  "total_amount": 500000.00,
+  "avg_amount": 1000.00,
+  "completed_orders": 480,
+  "cancelled_orders": 20
+}
+```
+
+## Статистика по пользователям
+
+Получите статистику по пользователям.
+
+<ParamField query={{
+  role: "string (optional)"
+}} />
+
+**Пример:**
+
+```bash
+GET /admin/stats/users?role=trader
+Authorization: Bearer {admin_token}
+```
+
+## Статистика по спорам
+
+Получите статистику по спорам.
+
+```bash
+GET /admin/stats/disputes
+Authorization: Bearer {admin_token}
+```
+
+**Пример ответа:**
+
+```json
+{
+  "total_disputes": 50,
+  "active_disputes": 5,
+  "resolved_disputes": 45,
+  "merchant_favor": 20,
+  "trader_favor": 25
+}
+```
+
+## Экспорт статистики
+
+Экспортируйте статистику в различных форматах (если поддерживается).
+
+<Info>
+Подробная документация всех эндпоинтов доступна в Swagger документации выше на этой странице.
+</Info>
+
+## См. также
+
+- [Admin API - Заявки](/platform/api-admin/orders)
+- [Admin API - Пользователи](/platform/api-admin/users)
+

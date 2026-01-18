@@ -1,0 +1,82 @@
+---
+title: "Trader API - Выплаты"
+description: "API для просмотра выплат трейдерам"
+---
+
+# Trader API - Выплаты
+
+API для просмотра информации о выплатах за выполнение заявок.
+
+## Список выплат
+
+Получите список всех выплат трейдера.
+
+<ParamField query={{
+  status: "string (optional)",
+  limit: "number (optional)",
+  offset: "number (optional)"
+}} />
+
+**Пример:**
+
+```bash
+GET /trader/payouts?status=completed
+Authorization: Bearer {token}
+```
+
+**Пример ответа:**
+
+```json
+{
+  "payouts": [
+    {
+      "id": "payout_123",
+      "order_id": "order_abc123",
+      "amount": 100.00,
+      "currency": "USD",
+      "status": "completed",
+      "requisite_id": "req_456",
+      "created_at": "2024-01-18T10:00:00Z",
+      "completed_at": "2024-01-18T11:00:00Z"
+    }
+  ],
+  "total": 25
+}
+```
+
+## Получить выплату
+
+Получите информацию о конкретной выплате.
+
+```bash
+GET /trader/payouts/{payout_id}
+Authorization: Bearer {token}
+```
+
+## Статусы выплаты
+
+- `pending` - ожидает обработки
+- `processing` - в процессе обработки
+- `completed` - успешно завершена
+- `failed` - ошибка при обработке
+
+<Info>
+Выплаты начисляются автоматически после успешного завершения заявки. Проверьте историю баланса для отслеживания выплат.
+</Info>
+
+## Связь с заявками
+
+Каждая выплата связана с заявкой (`order_id`). Используйте это для отслеживания выплат по конкретным заявкам.
+
+## Реквизиты для выплат
+
+Выплаты отправляются на реквизиты, указанные трейдером. Убедитесь что у вас есть активные реквизиты для получения выплат.
+
+Подробнее: [Trader API - Реквизиты](/platform/api-trader/requisites)
+
+## См. также
+
+- [Trader API - Заявки](/platform/api-trader/orders)
+- [Trader API - Реквизиты](/platform/api-trader/requisites)
+- [Система балансов](/features/balances)
+

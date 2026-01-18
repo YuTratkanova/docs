@@ -1,0 +1,111 @@
+---
+title: "Trader API - Заявки"
+description: "API для трейдеров - поиск и принятие заявок"
+---
+
+# Trader API - Заявки
+
+API для трейдеров позволяет искать доступные заявки и принимать их для выполнения.
+
+## Поиск доступных заявок
+
+Получите список доступных заявок для выполнения.
+
+<ParamField query={{
+  currency: "string (optional)",
+  amount_min: "number (optional)",
+  amount_max: "number (optional)",
+  limit: "number (optional)",
+  offset: "number (optional)"
+}} />
+
+**Пример:**
+
+```bash
+GET /trader/orders/available?currency=USD&amount_min=100
+Authorization: Bearer {token}
+```
+
+**Пример ответа:**
+
+```json
+{
+  "orders": [
+    {
+      "order_id": "order_abc123",
+      "amount": 1000,
+      "currency": "USD",
+      "status": "pending",
+      "created_at": "2024-01-18T10:00:00Z"
+    }
+  ],
+  "total": 50
+}
+```
+
+## Принять заявку
+
+Примите заявку для выполнения.
+
+```bash
+POST /trader/orders/{order_id}/accept
+Authorization: Bearer {token}
+```
+
+**Пример ответа:**
+
+```json
+{
+  "order_id": "order_abc123",
+  "status": "active",
+  "message": "Order accepted successfully"
+}
+```
+
+<Info>
+После принятия заявки она переходит в статус `active` и трейдер должен выполнить операцию.
+</Info>
+
+## Получить заявку
+
+Получите информацию о конкретной заявке.
+
+```bash
+GET /trader/orders/{order_id}
+Authorization: Bearer {token}
+```
+
+## Мои заявки
+
+Получите список заявок, принятых трейдером.
+
+<ParamField query={{
+  status: "string (optional)",
+  limit: "number (optional)",
+  offset: "number (optional)"
+}} />
+
+**Пример:**
+
+```bash
+GET /trader/orders?status=active
+Authorization: Bearer {token}
+```
+
+## Статусы заявки
+
+- `pending` - ожидает принятия
+- `active` - принята вами, в процессе выполнения
+- `completed` - успешно завершена
+- `cancelled` - отменена
+- `disputed` - открыт спор
+
+<Warning>
+Убедитесь что у вас есть активные реквизиты перед принятием заявки. Заявки требуют соответствующих реквизитов для выполнения.
+</Warning>
+
+## См. также
+
+- [Trader API - Реквизиты](/platform/api-trader/requisites)
+- [Trader API - Выплаты](/platform/api-trader/payouts)
+

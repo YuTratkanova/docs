@@ -1,0 +1,283 @@
+---
+title: "Развертывание"
+description: "Процесс развертывания приложения - локальная разработка, staging, продакшн"
+---
+
+# Развертывание
+
+Инструкции по развертыванию PandaPay в различных окружениях.
+
+## Окружения
+
+<CardGroup cols={3}>
+  <Card title="Development" icon="code">
+    Локальная среда для разработки
+  </Card>
+  <Card title="Staging" icon="server">
+    Тестовая среда для проверки изменений
+  </Card>
+  <Card title="Production" icon="globe">
+    Продакшн среда для реальных операций
+  </Card>
+</CardGroup>
+
+## Локальная разработка
+
+### Требования
+
+- Go 1.19+
+- PostgreSQL 13+
+- Node.js 16+ (для фронтенда)
+- AWS CLI (опционально, для эмуляции сервисов)
+
+### Настройка базы данных
+
+<Steps>
+<Step title="Создайте базу данных">
+  ```bash
+  createdb pandapay_dev
+  ```
+</Step>
+
+<Step title="Примените миграции">
+  ```bash
+  migrate -path ./internal/database/migrations \
+    -database "postgresql://user:password@localhost:5432/pandapay_dev" up
+  ```
+</Step>
+
+<Step title="Настройте переменные окружения">
+  Создайте файл `.env`:
+  ```
+  DB_HOST=localhost
+  DB_PORT=5432
+  DB_USER=postgres
+  DB_PASSWORD=password
+  DB_NAME=pandapay_dev
+  JWT_SECRET=your-secret-key
+  ```
+</Step>
+</Steps>
+
+### Запуск приложения
+
+```bash
+# Backend
+go run cmd/main.go
+
+# Frontend (в отдельном терминале)
+cd ../Trade-Frontend-main
+npm install
+npm run dev
+```
+
+## Staging окружение
+
+### Особенности
+
+- Используется для тестирования перед продакшном
+- Доступ ограничен для тестовых пользователей
+- Используются тестовые данные
+
+### Развертывание
+
+1. **Подготовка кода:**
+   ```bash
+   git checkout staging
+   git pull origin staging
+   ```
+
+2. **Сборка:**
+   ```bash
+   go build -o bin/pandapay cmd/main.go
+   ```
+
+3. **Применение миграций:**
+   ```bash
+   migrate -path ./internal/database/migrations \
+     -database "$STAGING_DATABASE_URL" up
+   ```
+
+4. **Запуск:**
+   ```bash
+   ./bin/pandapay
+   ```
+
+## Production окружение
+
+### Подготовка
+
+<Warning>
+Развертывание в продакшн требует особой осторожности. Всегда тестируйте изменения в staging перед продакшном.
+</Warning>
+
+### Чеклист перед развертыванием
+
+- [ ] Все изменения протестированы в staging
+- [ ] Миграции базы данных проверены
+- [ ] Резервная копия базы данных создана
+- [ ] Переменные окружения настроены
+- [ ] Мониторинг и алерты настроены
+
+### Процесс развертывания
+
+<Steps>
+<Step title="Создайте резервную копию">
+  ```bash
+  pg_dump -h production-db-host \
+    -U postgres \
+    -d pandapay_prod > backup_$(date +%Y%m%d_%H%M%S).sql
+  ```
+</Step>
+
+<Step title="Примените миграции">
+  ```bash
+  migrate -path ./internal/database/migrations \
+    -database "$PRODUCTION_DATABASE_URL" up
+  ```
+</Step>
+
+<Step title="Разверните новую версию">
+  ```bash
+  # Build
+  go build -o bin/pandapay cmd/main.go
+  
+  # Deploy (зависит от вашей инфраструктуры)
+  # AWS Elastic Beanstalk, ECS, EC2, etc.
+  ```
+</Step>
+
+<Step title="Проверьте работоспособность">
+  - Проверьте health check эндпоинты
+  - Убедитесь что API отвечает
+  - Проверьте логи на ошибки
+</Step>
+
+<Step title="Мониторинг">
+  - Следите за метриками
+  - Проверяйте логи CloudWatch
+  - Отслеживайте ошибки
+</Step>
+</Steps>
+
+## AWS развертывание
+
+### Используемые сервисы
+
+- **EC2 / ECS** - хостинг приложения
+- **RDS** - управляемая база данных PostgreSQL
+- **CloudWatch** - логирование и мониторинг
+- **Elastic Beanstalk** (опционально) - упрощенное развертывание
+- **S3** - хранение файлов и резервных копий
+
+### Настройка переменных окружения
+
+В AWS используйте:
+- **ECS Task Definitions** - для контейнеров
+- **Elastic Beanstalk Environment Variables** - для EB
+- **AWS Secrets Manager** - для секретов
+
+### Миграции в продакшне
+
+```bash
+# Подключитесь к продакшн серверу через SSH или используйте AWS Systems Manager
+
+# Примените миграции
+migrate -path ./internal/database/migrations \
+  -database "$PRODUCTION_DATABASE_URL" up
+```
+
+## CI/CD
+
+### GitHub Actions
+
+Пример workflow для автоматического развертывания:
+
+```yaml
+name: Deploy to Production
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.19'
+      
+      - name: Run migrations
+        run: |
+          migrate -path ./internal/database/migrations \
+            -database "${{ secrets.PRODUCTION_DATABASE_URL }}" up
+      
+      - name: Deploy
+        run: |
+          # Ваши команды развертывания
+```
+
+## Откат (Rollback)
+
+### Если что-то пошло не так
+
+<Steps>
+<Step title="Остановите новую версию">
+  Откатите развертывание до предыдущей версии.
+</Step>
+
+<Step title="Откатите миграции (если нужно)">
+  ```bash
+  migrate -path ./internal/database/migrations \
+    -database "$PRODUCTION_DATABASE_URL" down 1
+  ```
+</Step>
+
+<Step title="Восстановите базу данных">
+  Если миграции вызвали проблемы:
+  ```bash
+  psql -h production-db-host -U postgres \
+    -d pandapay_prod < backup_YYYYMMDD_HHMMSS.sql
+  ```
+</Step>
+</Steps>
+
+<Warning>
+Откат миграций может привести к потере данных. Всегда делайте резервную копию перед миграциями.
+</Warning>
+
+## Мониторинг после развертывания
+
+### Что проверять
+
+- Health check эндпоинты отвечают
+- API работает корректно
+- Нет ошибок в логах
+- Метрики в норме (CPU, память, запросы)
+- База данных работает нормально
+
+### CloudWatch метрики
+
+- CPU и память использования
+- Количество запросов
+- Время отклика API
+- Количество ошибок
+
+## Частые вопросы
+
+<AccordionGroup>
+  <Accordion title="Как часто можно развертывать в продакшн?">
+    Рекомендуется развертывать в продакшн в рабочие часы, когда активность ниже, чтобы минимизировать влияние на пользователей.
+  </Accordion>
+  <Accordion title="Что делать если миграция не применилась?">
+    Проверьте логи ошибок, убедитесь что база данных доступна. При необходимости откатите миграцию и исправьте проблему.
+  </Accordion>
+  <Accordion title="Как тестировать перед продакшном?">
+    Всегда тестируйте изменения в staging окружении, которое максимально близко к продакшну.
+  </Accordion>
+</AccordionGroup>
+

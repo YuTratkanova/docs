@@ -1,0 +1,198 @@
+---
+title: "Уведомления"
+description: "Система уведомлений - Telegram, Email, Callback для разных типов событий"
+---
+
+# Уведомления
+
+PandaPay отправляет уведомления через несколько каналов для информирования пользователей о важных событиях.
+
+## Каналы уведомлений
+
+<CardGroup cols={3}>
+  <Card title="Telegram" icon="message-circle">
+    Мгновенные уведомления для трейдеров через бота
+  </Card>
+  <Card title="Email" icon="mail">
+    Email уведомления для важных событий
+  </Card>
+  <Card title="Callback" icon="webhook">
+    Webhook уведомления для мерчантов при изменении статуса заявки
+  </Card>
+</CardGroup>
+
+## Telegram уведомления
+
+### Для трейдеров
+
+Telegram бот отправляет уведомления о:
+- Новых доступных заявках
+- Изменении статуса принятой заявки
+- Завершении заявки
+- Получении выплаты
+- Открытии спора
+
+### Настройка Telegram бота
+
+<Steps>
+<Step title="Получите Telegram User ID">
+  Найдите свой Telegram User ID через бота @userinfobot или другой сервис.
+</Step>
+
+<Step title="Войдите в настройки трейдера">
+  В личном кабинете трейдера перейдите в раздел "Настройки".
+</Step>
+
+<Step title="Добавьте Telegram User ID">
+  Введите ваш Telegram User ID в соответствующее поле и сохраните.
+</Step>
+
+<Step title="Подключите бота">
+  Подключите бота [@pandapay24_bot](https://t.me/pandapay24_bot) к вашему аккаунту.
+</Step>
+</Steps>
+
+### Telegram боты
+
+- **Production:** [@pandapay24_bot](https://t.me/pandapay24_bot)
+- **Development:** [@pandapay_alerts_bot](https://t.me/pandapay_alerts_bot)
+
+<Info>
+Telegram уведомления работают только для трейдеров после настройки Telegram User ID.
+</Info>
+
+## Email уведомления
+
+### Для всех пользователей
+
+Email уведомления отправляются при:
+- Важных изменениях статуса
+- Открытии споров
+- Изменении баланса (опционально)
+- Системных уведомлениях
+
+### Настройка Email
+
+Email уведомления настраиваются автоматически на основе email адреса в профиле пользователя.
+
+<Warning>
+Убедитесь, что ваш email адрес актуален и вы получаете письма. Проверьте папку "Спам" при необходимости.
+</Warning>
+
+## Callback уведомления
+
+### Для мерчантов
+
+Callback (webhook) позволяет мерчантам получать уведомления о изменении статуса заявки на их сервер.
+
+### Настройка Callback
+
+При создании заявки укажите `callback_url`:
+
+```json
+{
+  "amount": 1000,
+  "currency": "USD",
+  "callback_url": "https://your-site.com/api/callback"
+}
+```
+
+### Формат Callback запроса
+
+```bash
+POST {callback_url}
+Content-Type: application/json
+X-Signature: {signature}
+
+{
+  "order_id": "order_123",
+  "status": "completed",
+  "amount": 1000,
+  "currency": "USD",
+  "timestamp": "2024-01-18T10:00:00Z"
+}
+```
+
+### Подпись Callback
+
+Для безопасности используется подпись запроса. Проверяйте `X-Signature` заголовок на вашем сервере.
+
+Подробнее: [Merchant API - Callbacks](/platform/api-merchant/callbacks)
+
+### Пример обработки Callback
+
+```javascript
+app.post('/api/callback', (req, res) => {
+  // Проверка подписи
+  const signature = req.headers['x-signature'];
+  const isValid = verifySignature(req.body, signature);
+  
+  if (!isValid) {
+    return res.status(401).send('Invalid signature');
+  }
+  
+  // Обработка изменения статуса
+  const { order_id, status } = req.body;
+  updateOrderStatus(order_id, status);
+  
+  res.status(200).send('OK');
+});
+```
+
+## Типы уведомлений
+
+### Уведомления о заявках
+
+- Заявка создана
+- Заявка принята трейдером
+- Заявка завершена
+- Заявка отменена
+- Заявка в споре
+
+### Уведомления о выплатах
+
+- Выплата начислена
+- Выплата обработана
+- Проблема с выплатой
+
+### Уведомления о спорах
+
+- Спор открыт
+- Требуется ваше действие
+- Спор разрешен
+
+## Настройка уведомлений
+
+### В личном кабинете
+
+Пользователи могут настраивать уведомления:
+- Выбор типов уведомлений
+- Выбор каналов (Telegram, Email)
+- Настройка частоты
+
+### Через API
+
+Можно настроить callback для автоматической обработки уведомлений через webhook.
+
+## Отключение уведомлений
+
+Уведомления можно отключить или настроить фильтры для уменьшения количества сообщений.
+
+<Warning>
+Рекомендуется не отключать важные уведомления о спорах и критических изменениях статуса.
+</Warning>
+
+## Частые вопросы
+
+<AccordionGroup>
+  <Accordion title="Как подключить Telegram бота?">
+    Укажите ваш Telegram User ID в настройках трейдера и подключите бота @pandapay24_bot.
+  </Accordion>
+  <Accordion title="Почему не приходят уведомления?">
+    Проверьте настройки уведомлений в личном кабинете, убедитесь что Telegram User ID указан правильно, и проверьте папку "Спам" для email.
+  </Accordion>
+  <Accordion title="Как проверить что Callback работает?">
+    Используйте инструменты вроде ngrok для тестирования или проверьте логи вашего сервера на наличие входящих запросов от PandaPay.
+  </Accordion>
+</AccordionGroup>
+

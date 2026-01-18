@@ -1,0 +1,91 @@
+---
+title: "Admin API - Заявки"
+description: "API для администраторов - управление заявками"
+---
+
+# Admin API - Заявки
+
+API для администраторов позволяет управлять всеми заявками в системе.
+
+## Список заявок
+
+Получите список всех заявок с фильтрацией.
+
+<ParamField query={{
+  status: "string (optional)",
+  merchant_id: "string (optional)",
+  trader_id: "string (optional)",
+  date_from: "string (optional)",
+  date_to: "string (optional)",
+  limit: "number (optional)",
+  offset: "number (optional)"
+}} />
+
+**Пример:**
+
+```bash
+GET /admin/orders?status=active&merchant_id=123
+Authorization: Bearer {admin_token}
+```
+
+## Получить заявку
+
+Получите детальную информацию о заявке.
+
+```bash
+GET /admin/orders/{order_id}
+Authorization: Bearer {admin_token}
+```
+
+## Обновить статус заявки
+
+Вручную обновите статус заявки (для админов).
+
+```bash
+PUT /admin/orders/{order_id}/status
+Authorization: Bearer {admin_token}
+Content-Type: application/json
+
+{
+  "status": "completed",
+  "comment": "Manually completed by admin"
+}
+```
+
+<Warning>
+Изменение статуса заявки вручную может повлиять на финансовые операции. Используйте с осторожностью.
+</Warning>
+
+## Завершить заявку
+
+Завершите заявку вручную (если автоматическое завершение не сработало).
+
+```bash
+POST /admin/orders/{order_id}/complete
+Authorization: Bearer {admin_token}
+```
+
+## Отменить заявку
+
+Отмените заявку.
+
+```bash
+POST /admin/orders/{order_id}/cancel
+Authorization: Bearer {admin_token}
+Content-Type: application/json
+
+{
+  "reason": "Cancellation reason"
+}
+```
+
+<Info>
+Подробная документация всех эндпоинтов доступна в Swagger документации выше на этой странице.
+</Info>
+
+## См. также
+
+- [Admin API - Споры](/platform/api-admin/disputes)
+- [Admin API - Пользователи](/platform/api-admin/users)
+- [Admin API - Статистика](/platform/api-admin/stats)
+

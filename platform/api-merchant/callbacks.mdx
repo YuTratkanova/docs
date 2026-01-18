@@ -1,0 +1,185 @@
+---
+title: "Merchant API - Callbacks"
+description: "Настройка и обработка callback уведомлений о изменении статуса заявки"
+---
+
+# Merchant API - Callbacks
+
+Callbacks позволяют мерчантам получать уведомления о изменении статуса заявки на их сервер.
+
+## Настройка Callback
+
+Укажите `callback_url` при создании заявки:
+
+```json
+{
+  "amount": 1000,
+  "currency": "USD",
+  "callback_url": "https://your-site.com/api/callback"
+}
+```
+
+## Формат Callback запроса
+
+Система отправляет POST запрос на указанный URL при изменении статуса заявки.
+
+**Заголовки:**
+
+```
+Content-Type: application/json
+X-Signature: {signature}
+```
+
+**Тело запроса:**
+
+```json
+{
+  "order_id": "order_abc123",
+  "status": "completed",
+  "amount": 1000,
+  "currency": "USD",
+  "timestamp": "2024-01-18T10:00:00Z"
+}
+```
+
+## Проверка подписи
+
+Для безопасности используйте проверку подписи запроса.
+
+**Алгоритм:**
+
+1. Получите `X-Signature` из заголовков
+2. Создайте HMAC SHA256 подпись тела запроса
+3. Сравните с подписью из заголовка
+
+**Пример (JavaScript):**
+
+```javascript
+const crypto = require('crypto');
+
+function verifyCallback(body, signature, secret) {
+  const hash = crypto
+    .createHmac('sha256', secret)
+    .update(JSON.stringify(body))
+    .digest('hex');
+  
+  return hash === signature;
+}
+
+// В обработчике callback
+app.post('/api/callback', (req, res) => {
+  const signature = req.headers['x-signature'];
+  const secret = process.env.CALLBACK_SECRET;
+  
+  if (!verifyCallback(req.body, signature, secret)) {
+    return res.status(401).send('Invalid signature');
+  }
+  
+  // Обработка уведомления
+  const { order_id, status } = req.body;
+  updateOrderStatus(order_id, status);
+  
+  res.status(200).send('OK');
+});
+```
+
+<Warning>
+Всегда проверяйте подпись callback запросов для предотвращения подделки.
+</Warning>
+
+## Статусы заявки
+
+Callbacks отправляются при изменении статуса на:
+
+- `active` - заявка принята трейдером
+- `completed` - заявка успешно завершена
+- `cancelled` - заявка отменена
+- `disputed` - открыт спор по заявке
+
+## Обработка Callback
+
+### Рекомендации
+
+1. **Всегда возвращайте 200 OK** - система повторяет запрос при ошибках
+2. **Обрабатывайте идемпотентно** - один статус может прийти несколько раз
+3. **Проверяйте подпись** - для безопасности
+4. **Логируйте запросы** - для отладки
+
+### Пример обработчика
+
+```javascript
+app.post('/api/callback', async (req, res) => {
+  try {
+    // Проверка подписи
+    const signature = req.headers['x-signature'];
+    if (!verifySignature(req.body, signature)) {
+      return res.status(401).json({ error: 'Invalid signature' });
+    }
+    
+    const { order_id, status, amount, currency } = req.body;
+    
+    // Идемпотентная обработка
+    const order = await findOrder(order_id);
+    if (order && order.status === status) {
+      return res.status(200).json({ message: 'Already processed' });
+    }
+    
+    // Обновление статуса
+    await updateOrderStatus(order_id, status);
+    
+    res.status(200).json({ message: 'OK' });
+  } catch (error) {
+    console.error('Callback error:', error);
+    res.status(500).json({ error: 'Internal error' });
+  }
+});
+```
+
+## Тестирование
+
+### Использование ngrok
+
+Для локального тестирования используйте ngrok:
+
+```bash
+# Запустите ngrok
+ngrok http 3000
+
+# Используйте полученный URL как callback_url
+# https://abc123.ngrok.io/api/callback
+```
+
+### Проверка запросов
+
+Логируйте все входящие callback запросы для отладки:
+
+```javascript
+app.post('/api/callback', (req, res) => {
+  console.log('Callback received:', {
+    headers: req.headers,
+    body: req.body
+  });
+  
+  // ... обработка
+});
+```
+
+## Частые вопросы
+
+<AccordionGroup>
+  <Accordion title="Что делать если callback не приходит?">
+    Проверьте доступность URL, убедитесь что сервер отвечает 200 OK, проверьте логи вашего сервера и CloudWatch логи PandaPay.
+  </Accordion>
+  <Accordion title="Сколько раз повторяется callback?">
+    Система повторяет запрос несколько раз при ошибке, но обычно callback приходит один раз при изменении статуса.
+  </Accordion>
+  <Accordion title="Как получить секретный ключ для проверки подписи?">
+    Секретный ключ выдается при регистрации мерчанта или настраивается в админ-панели.
+  </Accordion>
+</AccordionGroup>
+
+## См. также
+
+- [Merchant API - Заявки](/platform/api-merchant/orders)
+- [Уведомления](/features/notifications)
+
