@@ -1,5 +1,6 @@
 {
   "$schema": "https://mintlify.com/schema.json",
+  "theme": "mint",
   "name": "PandaPay Trade Platform",
   "logo": {
     "dark": "/logo/dark.svg",
