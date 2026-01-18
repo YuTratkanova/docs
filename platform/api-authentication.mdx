@@ -1,0 +1,117 @@
+---
+title: "Аутентификация"
+description: "Как аутентифицироваться в API PandaPay - получение токенов, использование"
+---
+
+# Аутентификация в API
+
+API PandaPay использует Bearer токены для аутентификации пользователей.
+
+## Получение токена
+
+Токен доступа выдается после успешной аутентификации пользователя. Процесс аутентификации зависит от вашей роли и способа интеграции.
+
+### Через админ-панель
+
+1. Войдите в админ-панель
+2. Перейдите в настройки
+3. Создайте API ключ
+4. Используйте полученный токен
+
+### Через API
+
+```bash
+POST /auth/login
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "password"
+}
+```
+
+Ответ:
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "expires_in": 3600
+}
+```
+
+## Использование токена
+
+Передавайте токен в заголовке `Authorization`:
+
+```bash
+Authorization: Bearer {your-token}
+```
+
+### Пример запроса
+
+```bash
+GET /order/{id}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
+
+## Обновление токена
+
+Токены имеют срок действия. Для обновления токена:
+
+```bash
+POST /auth/refresh
+Authorization: Bearer {refresh-token}
+```
+
+## Права доступа
+
+Токен содержит информацию о роли пользователя и его правах доступа:
+
+- **Merchant** - доступ к Merchant API
+- **Trader** - доступ к Trader API
+- **Admin** - доступ к Admin API
+- **Super Admin** - полный доступ
+
+## Безопасность
+
+<Warning>
+Никогда не передавайте токен в URL параметрах. Всегда используйте заголовок Authorization.
+</Warning>
+
+<Info>
+Токены имеют срок действия. Храните refresh token для обновления access token.
+</Info>
+
+## Примеры
+
+### cURL
+
+```bash
+curl -X GET "https://api.pandapay.com/order/123" \
+  -H "Authorization: Bearer {your-token}" \
+  -H "Content-Type: application/json"
+```
+
+### JavaScript (Fetch)
+
+```javascript
+const response = await fetch('https://api.pandapay.com/order/123', {
+  headers: {
+    'Authorization': `Bearer ${token}`,
+    'Content-Type': 'application/json'
+  }
+});
+```
+
+### Python (Requests)
+
+```python
+import requests
+
+headers = {
+    'Authorization': f'Bearer {token}',
+    'Content-Type': 'application/json'
+}
+
+response = requests.get('https://api.pandapay.com/order/123', headers=headers)
+```
+

@@ -1,43 +1,143 @@
-# Mintlify Starter Kit
+# PandaPay Documentation
 
-Use the starter kit to get your docs deployed and ready to customize.
+Документация для платформы PandaPay Trade Platform, созданная с помощью Mintlify.
 
-Click the green **Use this template** button at the top of this repo to copy the Mintlify starter kit. The starter kit contains examples with
-
-- Guide pages
-- Navigation
-- Customizations
-- API reference pages
-- Use of popular components
-
-**[Follow the full quickstart guide](https://starter.mintlify.com/quickstart)**
-
-## Development
-
-Install the [Mintlify CLI](https://www.npmjs.com/package/mint) to preview your documentation changes locally. To install, use the following command:
+## Структура документации
 
 ```
-npm i -g mint
+docs/
+├── mint.json                    # Конфигурация Mintlify
+├── introduction.mdx             # Главная страница
+├── quickstart.mdx               # Быстрый старт
+├── architecture-overview.mdx     # Обзор архитектуры
+├── roles/                       # Роли пользователей
+│   ├── merchant.mdx
+│   ├── trader.mdx
+│   ├── team-lead.mdx
+│   ├── admin.mdx
+│   └── super-admin.mdx
+├── platform/                    # Backend API
+│   ├── api-introduction.mdx
+│   ├── api-authentication.mdx
+│   ├── api-merchant/
+│   ├── api-trader/
+│   └── api-admin/
+├── frontend/                    # Frontend документация
+│   ├── overview.mdx
+│   ├── getting-started.mdx
+│   ├── admin/
+│   ├── merchant/
+│   ├── trader/
+│   ├── team-lead/
+│   └── payment-window/
+├── features/                    # Функционал системы
+│   └── orders.mdx
+├── support/                     # Техподдержка
+│   └── faq.mdx
+└── technical/                   # Технические детали
 ```
 
-Run the following command at the root of your documentation, where your `docs.json` is located:
+## Настройка Mintlify
 
+### 1. Регистрация в Mintlify
+
+1. Перейдите на [mintlify.com](https://mintlify.com)
+2. Зарегистрируйтесь или войдите
+3. Создайте новый проект
+
+### 2. Подключение репозитория
+
+1. В настройках проекта выберите "Connect Repository"
+2. Подключите ваш GitHub репозиторий
+3. Укажите путь к документации: `docs/`
+
+### 3. Настройка API ключа
+
+1. В настройках проекта найдите "API Key"
+2. Скопируйте API ключ
+3. Добавьте его в GitHub Secrets:
+   - Перейдите в Settings → Secrets and variables → Actions
+   - Создайте новый secret: `MINTLIFY_API_KEY`
+   - Вставьте скопированный API ключ
+
+### 4. Включение AI Copilot
+
+1. В настройках проекта найдите "AI Copilot"
+2. Включите AI чат-бот
+3. Настройте параметры (опционально)
+
+### 5. Первый деплой
+
+После настройки документация будет автоматически деплоиться при каждом push в ветку `main` или `master`.
+
+Также можно запустить деплой вручную:
+- Через GitHub Actions: Actions → Deploy to Mintlify → Run workflow
+- Через Mintlify CLI: `mintlify deploy`
+
+## Локальная разработка
+
+### Установка Mintlify CLI
+
+```bash
+npm i -g mintlify
 ```
-mint dev
+
+### Запуск локального сервера
+
+```bash
+cd docs
+mintlify dev
 ```
 
-View your local preview at `http://localhost:3000`.
+Документация будет доступна по адресу `http://localhost:3000`
 
-## Publishing changes
+## Автоматическое обновление
 
-Install our GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app) to propagate changes from your repo to your deployment. Changes are deployed to production automatically after pushing to the default branch.
+Документация автоматически обновляется при каждом изменении файлов в папке `docs/` благодаря GitHub Actions workflow (`.github/workflows/mintlify-deploy.yml`).
 
-## Need help?
+Workflow запускается при:
+- Push в ветку `main` или `master`
+- Изменении файлов в папке `docs/`
+- Ручном запуске через GitHub Actions
 
-### Troubleshooting
+## Добавление нового контента
 
-- If your dev environment isn't running: Run `mint update` to ensure you have the most recent version of the CLI.
-- If a page loads as a 404: Make sure you are running in a folder with a valid `docs.json`.
+1. Создайте новый `.mdx` файл в соответствующей папке
+2. Добавьте страницу в `mint.json` в раздел `navigation`
+3. Заполните контент используя MDX синтаксис
+4. Закоммитьте и запушьте изменения
+5. Документация автоматически обновится
 
-### Resources
-- [Mintlify documentation](https://mintlify.com/docs)
+## Формат файлов
+
+Все файлы документации должны быть в формате `.mdx` (Markdown + JSX).
+
+### Пример страницы
+
+```mdx
+---
+title: "Название страницы"
+description: "Краткое описание"
+---
+
+# Заголовок
+
+Текст с использованием **Markdown** синтаксиса.
+
+<Card title="Карточка">
+  Содержимое карточки
+</Card>
+```
+
+## Полезные ссылки
+
+- [Mintlify документация](https://mintlify.com/docs)
+- [MDX документация](https://mdxjs.com/)
+- [Mintlify компоненты](https://mintlify.com/docs/components/overview)
+
+## Поддержка
+
+Если у вас возникли вопросы по документации:
+1. Проверьте [Mintlify документацию](https://mintlify.com/docs)
+2. Обратитесь к команде разработки
+

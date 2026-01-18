@@ -1,0 +1,114 @@
+---
+title: "Frontend Обзор"
+description: "Обзор Frontend приложения Trade-Frontend - технологии, структура, интерфейсы"
+---
+
+# Frontend (Trade-Frontend) - Обзор
+
+Frontend приложение PandaPay Trade Platform построено на React и TypeScript.
+
+## Технологии
+
+<CardGroup cols={2}>
+  <Card title="React" icon="code">
+    Современный JavaScript фреймворк для создания UI
+  </Card>
+  <Card title="TypeScript" icon="code">
+    Типизированный JavaScript для надежности кода
+  </Card>
+  <Card title="Tailwind CSS" icon="palette">
+    Utility-first CSS фреймворк для стилизации
+  </Card>
+  <Card title="shadcn/ui" icon="layout">
+    Компоненты UI на основе Radix UI
+  </Card>
+</CardGroup>
+
+## Структура приложения
+
+### Основные модули
+
+- **Pages** - страницы приложения для разных ролей
+- **Components** - переиспользуемые компоненты
+- **API** - клиенты для работы с API
+- **Hooks** - кастомные React хуки
+- **Utils** - утилиты и хелперы
+
+## Интерфейсы по ролям
+
+### Админ-панель
+
+Полнофункциональная панель для администраторов:
+- Дашборд с статистикой
+- Управление заявками
+- Управление пользователями
+- Разрешение споров
+- И многое другое
+
+Подробнее: [Админ-панель](/frontend/admin/dashboard)
+
+### Панель мерчанта
+
+Интерфейс для мерчантов:
+- Создание и отслеживание заявок
+- Просмотр баланса
+- Управление выплатами
+- Настройки
+
+Подробнее: [Панель мерчанта](/frontend/merchant/dashboard)
+
+### Панель трейдера
+
+Интерфейс для трейдеров:
+- Просмотр доступных заявок
+- Управление реквизитами
+- Просмотр выплат
+- Управление устройствами
+
+Подробнее: [Панель трейдера](/frontend/trader/dashboard)
+
+### Панель тимлида
+
+Интерфейс для тимлидов:
+- Управление командой
+- Статистика по команде
+- Просмотр наград
+
+Подробнее: [Панель тимлида](/frontend/team-lead/dashboard)
+
+### Payment Window
+
+Окно оплаты для интеграции:
+- Отображение заявки
+- Загрузка скриншотов
+- Таймеры и уведомления
+
+Подробнее: [Payment Window](/frontend/payment-window/overview)
+
+## Быстрый старт
+
+### Установка
+
+```bash
+npm install
+```
+
+### Запуск в режиме разработки
+
+```bash
+npm run dev
+```
+
+### Сборка для production
+
+```bash
+npm run build
+```
+
+## Полезные ссылки
+
+- [Админ-панель](/frontend/admin/dashboard)
+- [Панель мерчанта](/frontend/merchant/dashboard)
+- [Панель трейдера](/frontend/trader/dashboard)
+- [Payment Window](/frontend/payment-window/overview)
+

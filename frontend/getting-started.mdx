@@ -1,0 +1,99 @@
+---
+title: "Начало работы с Frontend"
+description: "Как начать работу с Frontend приложением - установка, запуск, разработка"
+---
+
+# Начало работы с Frontend
+
+Руководство по установке и запуску Frontend приложения Trade-Frontend.
+
+## Требования
+
+- Node.js 18+ 
+- npm или yarn
+- Git
+
+## Установка
+
+### 1. Клонирование репозитория
+
+```bash
+git clone https://github.com/pandapay/trade-frontend.git
+cd trade-frontend
+```
+
+### 2. Установка зависимостей
+
+```bash
+npm install
+```
+
+### 3. Настройка окружения
+
+Создайте файл `.env` с необходимыми переменными окружения:
+
+```env
+VITE_API_URL=https://api.pandapay.com
+VITE_APP_NAME=PandaPay
+```
+
+## Запуск
+
+### Режим разработки
+
+```bash
+npm run dev
+```
+
+Приложение будет доступно по адресу `http://localhost:5173`
+
+### Сборка для production
+
+```bash
+npm run build
+```
+
+Собранные файлы будут в папке `dist/`
+
+### Предпросмотр production сборки
+
+```bash
+npm run preview
+```
+
+## Форматирование кода
+
+### Автоматическое форматирование
+
+```bash
+npm run format
+```
+
+### Настройка VSCode
+
+Добавьте в `.vscode/settings.json`:
+
+```json
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
+}
+```
+
+## Структура проекта
+
+```
+src/
+├── api/          # API клиенты
+├── components/   # Компоненты
+├── pages/        # Страницы
+├── hooks/        # React хуки
+├── utils/        # Утилиты
+└── ...
+```
+
+## Полезные ссылки
+
+- [Frontend обзор](/frontend/overview)
+- [Админ-панель](/frontend/admin/dashboard)
+

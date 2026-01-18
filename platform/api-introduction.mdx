@@ -1,0 +1,120 @@
+---
+title: "API Введение"
+description: "Введение в Backend API платформы PandaPay - аутентификация, базовые концепции"
+---
+
+# Backend API - Введение
+
+PandaPay Trade Platform предоставляет RESTful API для интеграции с системой.
+
+## Базовый URL
+
+```
+Production: https://api.pandapay.com
+Development: https://dev-api.pandapay.com
+```
+
+## Аутентификация
+
+API использует Bearer токены для аутентификации. Получите токен через процесс аутентификации и передавайте его в заголовке:
+
+```bash
+Authorization: Bearer {your-token}
+```
+
+Подробнее: [Аутентификация](/platform/api-authentication)
+
+## Формат данных
+
+API использует JSON для всех запросов и ответов:
+
+```json
+{
+  "amount": 1000,
+  "currency": "USD"
+}
+```
+
+## Коды ответов
+
+- `200` - Успешный запрос
+- `201` - Ресурс создан
+- `400` - Неверный запрос
+- `401` - Не авторизован
+- `403` - Доступ запрещен
+- `404` - Ресурс не найден
+- `500` - Внутренняя ошибка сервера
+
+## Swagger документация
+
+Полная спецификация API доступна в Swagger формате:
+
+- Основной Swagger: `../Trade-Platform-main/docs/swagger.yaml`
+- V1 API: `../Trade-Platform-main/docs/v1/v1_swagger.yaml`
+
+Вы можете просмотреть документацию через [Swagger Editor](https://editor.swagger.io/).
+
+## Разделы API
+
+<CardGroup cols={2}>
+  <Card title="Merchant API" href="/platform/api-merchant/orders">
+    API для мерчантов - создание заявок, управление балансом
+  </Card>
+  <Card title="Trader API" href="/platform/api-trader/orders">
+    API для трейдеров - работа с заявками, реквизиты
+  </Card>
+  <Card title="Admin API" href="/platform/api-admin/orders">
+    API для админов - управление системой
+  </Card>
+</CardGroup>
+
+## Rate Limiting
+
+API имеет ограничения на количество запросов:
+- По умолчанию: 100 запросов в минуту
+- Для админов: 200 запросов в минуту
+
+При превышении лимита возвращается код `429 Too Many Requests`.
+
+## Обработка ошибок
+
+При ошибке API возвращает JSON с описанием:
+
+```json
+{
+  "error": "Error message",
+  "code": "ERROR_CODE",
+  "details": {}
+}
+```
+
+## Примеры использования
+
+### Создание заявки
+
+```bash
+POST /order
+Authorization: Bearer {token}
+Content-Type: application/json
+
+{
+  "amount": 1000,
+  "currency": "USD",
+  "callback_url": "https://your-site.com/callback"
+}
+```
+
+### Получение заявки
+
+```bash
+GET /order/{id}
+Authorization: Bearer {token}
+```
+
+## Полезные ссылки
+
+- [Аутентификация](/platform/api-authentication)
+- [Merchant API](/platform/api-merchant/orders)
+- [Trader API](/platform/api-trader/orders)
+- [Admin API](/platform/api-admin/orders)
+

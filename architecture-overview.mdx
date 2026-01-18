@@ -1,0 +1,146 @@
+---
+title: "Обзор архитектуры"
+description: "Архитектура системы PandaPay Trade Platform - компоненты и их взаимодействие"
+---
+
+# Обзор архитектуры
+
+PandaPay Trade Platform состоит из двух основных компонентов: Backend (Trade-Platform) и Frontend (Trade-Frontend).
+
+## Компоненты системы
+
+<CardGroup cols={2}>
+  <Card title="Backend (Trade-Platform)" icon="server">
+    Go приложение с RESTful API, PostgreSQL база данных
+  </Card>
+  <Card title="Frontend (Trade-Frontend)" icon="monitor">
+    React приложение с TypeScript, интерфейсы для всех ролей
+  </Card>
+</CardGroup>
+
+## Backend (Trade-Platform)
+
+### Технологии
+- **Язык:** Go (Golang)
+- **База данных:** PostgreSQL
+- **API:** RESTful API
+- **Документация:** Swagger/OpenAPI
+
+### Основные функции
+- Управление заявками (Orders)
+- Управление балансами
+- Система споров (Disputes)
+- Управление пользователями
+- Управление реквизитами
+- Интеграция с банками
+- Уведомления (Telegram, Email, Callback)
+
+### API Endpoints
+- `/order` - управление заявками
+- `/balance` - управление балансами
+- `/trader/*` - API для трейдеров
+- `/admin/*` - API для админов
+- `/merchant/*` - API для мерчантов
+
+Подробнее: [Backend API](/platform/api-introduction)
+
+## Frontend (Trade-Frontend)
+
+### Технологии
+- **Фреймворк:** React
+- **Язык:** TypeScript
+- **Стили:** Tailwind CSS
+- **UI компоненты:** shadcn/ui
+
+### Интерфейсы
+
+#### Админ-панель
+- Дашборд с статистикой
+- Управление заявками
+- Управление пользователями
+- Разрешение споров
+- Управление балансами
+- Настройки системы
+
+#### Панель мерчанта
+- Создание и отслеживание заявок
+- Просмотр баланса и истории
+- Управление выплатами
+- Настройки
+
+#### Панель трейдера
+- Просмотр доступных заявок
+- Управление реквизитами
+- Просмотр выплат
+- Управление устройствами
+- Настройки
+
+#### Панель тимлида
+- Управление командой трейдеров
+- Статистика по команде
+- Просмотр наград
+- Настройки
+
+#### Payment Window
+- Окно оплаты для интеграции
+- Отображение заявки
+- Загрузка скриншотов
+- Таймеры и уведомления
+
+Подробнее: [Frontend документация](/frontend/overview)
+
+## Поток данных
+
+```
+Мерчант → API → Backend → Database
+                ↓
+            Frontend ← User Interface
+                ↓
+            Notifications (Telegram, Email, Callback)
+```
+
+## База данных
+
+### Основные таблицы
+- `orders` - заявки
+- `users` - пользователи
+- `balance_history` - история балансов
+- `disputes` - споры
+- `requisites` - реквизиты
+- `payouts` - выплаты
+- `devices` - устройства
+
+Подробнее: [Структура базы данных](/technical/database)
+
+## Интеграции
+
+### Telegram
+- Бот для уведомлений трейдеров
+- Production: [@pandapay24_bot](https://t.me/pandapay24_bot)
+- Development: [@pandapay_alerts_bot](https://t.me/pandapay_alerts_bot)
+
+### Банки
+- Интеграция для получения уведомлений о платежах
+- Автоматическое завершение заявок
+
+### Callback
+- Webhook для мерчантов при изменении статуса заявки
+
+## Безопасность
+
+- Аутентификация через JWT токены
+- Роли и права доступа
+- Валидация данных
+- Защита от SQL инъекций
+
+Подробнее: [Безопасность](/technical/security)
+
+## Развертывание
+
+Система развертывается на:
+- Backend: сервер с Go runtime
+- Frontend: статический хостинг или CDN
+- Database: PostgreSQL сервер
+
+Подробнее: [Развертывание](/technical/deployment)
+

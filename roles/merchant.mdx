@@ -1,0 +1,138 @@
+---
+title: "Мерчант (Merchant)"
+description: "Руководство для мерчантов - создание заявок, управление балансом, работа с API"
+---
+
+# Мерчант (Merchant)
+
+## Кто это?
+
+**Мерчант** - это владельцы бизнеса или сервисов, которые принимают платежи через платформу PandaPay.
+
+Мерчанты создают заявки на обмен, которые затем выполняются трейдерами.
+
+## Основные функции
+
+<CardGroup cols={2}>
+  <Card title="Создание заявок" icon="plus-circle">
+    Создание заявок на обмен через API или админ-панель
+  </Card>
+  <Card title="Отслеживание статуса" icon="eye">
+    Просмотр статуса заявок в реальном времени
+  </Card>
+  <Card title="Управление балансом" icon="wallet">
+    Просмотр баланса и истории операций
+  </Card>
+  <Card title="Выплаты" icon="dollar-sign">
+    Просмотр и управление выплатами
+  </Card>
+</CardGroup>
+
+## Доступ
+
+### Личный кабинет мерчанта
+- Дашборд с статистикой
+- Управление заявками
+- История баланса
+- Выплаты
+- Настройки
+
+### API для создания заявок
+- `POST /order` - создание заявки
+- `GET /order/{id}` - получение информации о заявке
+- `GET /balance` - получение баланса
+
+Подробнее: [Merchant API](/platform/api-merchant/orders)
+
+## Создание заявки
+
+### Через API
+
+```bash
+POST /order
+Content-Type: application/json
+Authorization: Bearer {token}
+
+{
+  "amount": 1000,
+  "currency": "USD",
+  "callback_url": "https://your-site.com/callback"
+}
+```
+
+### Через админ-панель
+
+1. Войдите в админ-панель
+2. Перейдите в раздел "Заявки"
+3. Нажмите "Создать заявку"
+4. Заполните необходимые поля
+
+## Статусы заявки
+
+- `pending` - ожидает трейдера
+- `accepted` - принята трейдером
+- `completed` - завершена
+- `cancelled` - отменена
+- `disputed` - спор
+
+## Уведомления
+
+Система отправляет уведомления о изменении статуса заявки:
+
+- **Callback** - webhook на указанный URL
+- **Email** - уведомление на email мерчанта
+
+### Настройка Callback
+
+```json
+{
+  "callback_url": "https://your-site.com/callback",
+  "callback_secret": "your-secret-key"
+}
+```
+
+Подробнее: [Callbacks](/platform/api-merchant/callbacks)
+
+## Управление балансом
+
+### Просмотр баланса
+
+```bash
+GET /balance
+Authorization: Bearer {token}
+```
+
+### История операций
+
+```bash
+GET /balance/history
+Authorization: Bearer {token}
+```
+
+## Выплаты
+
+Мерчанты могут просматривать информацию о выплатах трейдерам через:
+- API эндпоинт `/payouts`
+- Интерфейс админ-панели
+
+## Частые вопросы
+
+<AccordionGroup>
+  <Accordion title="Как создать заявку?">
+    Заявку можно создать через API эндпоинт `POST /order` или через админ-панель в разделе "Заявки".
+  </Accordion>
+  <Accordion title="Как отследить статус заявки?">
+    Используйте эндпоинт `GET /order/{id}` или настройте callback для автоматических уведомлений.
+  </Accordion>
+  <Accordion title="Как проверить баланс?">
+    Используйте эндпоинт `GET /balance` или просмотрите в личном кабинете.
+  </Accordion>
+</AccordionGroup>
+
+## Полезные ссылки
+
+- [Merchant API документация](/platform/api-merchant/orders)
+- [Frontend интерфейс мерчанта](/frontend/merchant/dashboard)
+- [Система заявок](/features/orders)
+- [Уведомления](/features/notifications)
+
